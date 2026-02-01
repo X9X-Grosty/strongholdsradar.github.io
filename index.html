@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YOUR BUSINESS NAME HERE</title>
+  <meta name="description" content="Subscription-based Discord radar bot delivering automated alerts to your private server." />
+  <style>
+    :root{
+      --bg:#0b0f17;
+      --panel:#101827;
+      --panel2:#0f172a;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --line:rgba(255,255,255,.08);
+      --accent:#7c3aed;
+      --accent2:#22c55e;
+      --warn:#f59e0b;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --max:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(124,58,237,.25), transparent 60%),
+                  radial-gradient(1000px 600px at 90% 0%, rgba(34,197,94,.12), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:var(--max); margin:0 auto; padding: 0 18px;}
+    .nav{
+      position:sticky; top:0; z-index:5;
+      backdrop-filter: blur(10px);
+      background: rgba(11,15,23,.65);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      height:64px;
+    }
+    .brand{
+      display:flex; gap:10px; align-items:center; font-weight:800; letter-spacing:.2px;
+    }
+    .logo{
+      width:34px; height:34px; border-radius:10px;
+      background: linear-gradient(135deg, rgba(124,58,237,1), rgba(34,197,94,1));
+      box-shadow: 0 10px 25px rgba(124,58,237,.25);
+    }
+    .nav-links{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+    .nav-links a{
+      padding:8px 10px; border-radius:10px; color:var(--muted);
+    }
+    .nav-links a:hover{background:rgba(255,255,255,.04); color:var(--text)}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      padding:10px 14px; border-radius:12px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color:var(--text);
+      box-shadow: var(--shadow);
+      font-weight:700;
+      gap:8px;
+    }
+    .btn.primary{
+      border-color: rgba(124,58,237,.45);
+      background: linear-gradient(135deg, rgba(124,58,237,.25), rgba(34,197,94,.12));
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .hero{padding: 54px 0 28px;}
+    .hero-grid{
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:22px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero-grid{grid-template-columns:1fr}
+      .nav-links{display:none}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(16,24,39,.9), rgba(15,23,42,.85));
+      border:1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .hero-left{padding:28px}
+    .kicker{
+      display:inline-flex; gap:8px; align-items:center;
+      color: var(--muted);
+      border:1px solid var(--line);
+      padding:6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.02);
+      font-weight:600;
+      font-size: 13px;
+    }
+    h1{
+      margin:14px 0 10px;
+      font-size: 42px;
+      line-height:1.05;
+      letter-spacing:-.8px;
+    }
+    .sub{
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      margin:0 0 18px;
+      max-width: 62ch;
+    }
+    .hero-actions{display:flex; gap:10px; flex-wrap:wrap}
+    .hero-right{padding:18px}
+    .panel{
+      padding:18px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.02);
+      border:1px dashed rgba(255,255,255,.12);
+    }
+    .panel h3{margin:0 0 10px; font-size:14px; color:var(--muted); font-weight:800; letter-spacing:.4px; text-transform:uppercase}
+    .panel ul{margin:0; padding-left:18px; color:var(--text)}
+    .panel li{margin:8px 0; color:var(--muted)}
+    section{padding: 22px 0}
+    .sec-title{
+      display:flex; align-items:flex-end; justify-content:space-between;
+      gap:14px; margin-bottom:12px;
+    }
+    .sec-title h2{
+      margin:0;
+      font-size:22px;
+      letter-spacing:-.2px;
+    }
+    .sec-title p{margin:0; color:var(--muted); font-size:14px}
+    .grid3{display:grid; grid-template-columns: repeat(3,1fr); gap:14px}
+    @media (max-width: 900px){.grid3{grid-template-columns:1fr}}
+    .feature{padding:16px}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      font-weight:800; font-size:13px;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124,58,237,.18);
+    }
+    .feature p{margin:0; color:var(--muted); line-height:1.6}
+    .stats{display:grid; grid-template-columns: repeat(4,1fr); gap:14px}
+    @media (max-width: 900px){.stats{grid-template-columns: repeat(2,1fr)}}
+    .stat{padding:16px}
+    .stat .n{font-size:26px; font-weight:900}
+    .stat .l{color:var(--muted); margin-top:4px}
+    .pricing{display:grid; grid-template-columns: repeat(3,1fr); gap:14px}
+    @media (max-width: 900px){.pricing{grid-template-columns:1fr}}
+    .plan{padding:18px}
+    .plan h3{margin:0 0 6px}
+    .price{font-size:30px; font-weight:900; margin:10px 0}
+    .plan ul{margin:0; padding-left:18px; color:var(--muted)}
+    .plan li{margin:8px 0}
+    .tag{
+      display:inline-flex; align-items:center; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); color:var(--muted); font-weight:700; font-size:12px;
+      background: rgba(255,255,255,.02);
+    }
+    details{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background: rgba(255,255,255,.02);
+      padding: 12px 14px;
+    }
+    details + details{margin-top:10px}
+    summary{cursor:pointer; font-weight:800}
+    summary::-webkit-details-marker{display:none}
+    .faq p{margin:8px 0 0; color:var(--muted); line-height:1.6}
+    footer{
+      padding: 28px 0 40px;
+      border-top:1px solid var(--line);
+      color: var(--muted);
+    }
+    .footer-grid{display:grid; grid-template-columns: 1.2fr .8fr; gap:14px}
+    @media (max-width: 900px){.footer-grid{grid-template-columns:1fr}}
+    .small{font-size:13px; line-height:1.6}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 10px; border-radius:999px;
+      border:1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      color: var(--muted);
+      font-weight:700;
+      font-size: 12px;
+    }
+    .note{
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(245,158,11,.25);
+      background: rgba(245,158,11,.08);
+      color: var(--text);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="nav">
+    <div class="wrap nav-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>YOUR BUSINESS NAME HERE</div>
+      </div>
+
+      <div class="nav-links" aria-label="Primary">
+        <a href="#features">Features</a>
+        <a href="#results">Results</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <a class="btn primary" href="#pricing">Get Access</a>
+    </div>
+  </div>
+
+  <div class="wrap hero" id="home">
+    <div class="hero-grid">
+      <div class="card hero-left">
+        <div class="kicker">
+          <span class="pill">Discord-first</span>
+          <span class="pill">Subscription</span>
+          <span class="pill">Automated alerts</span>
+        </div>
+
+        <h1>Radar alerts that actually stay under control.</h1>
+        <p class="sub">
+          YOUR BUSINESS NAME HERE is a subscription-based Discord radar bot that sends automated notifications to your private server.
+          If a subscription is inactive, alerts stop—no “oops it still posted” situations.
+        </p>
+
+        <div class="hero-actions">
+          <!-- Replace with your Stripe Checkout link once you have it -->
+          <a class="btn primary" href="#pricing">View plans</a>
+          <!-- Replace with your Discord invite if you want -->
+          <a class="btn" href="#contact">Support</a>
+        </div>
+
+        <div class="note small">
+          Delivery is through Discord. Payments are handled by Stripe. You will receive access after payment is confirmed.
+        </div>
+      </div>
+
+      <div class="card hero-right">
+        <div class="panel">
+          <h3>How it works</h3>
+          <ul>
+            <li>You subscribe and receive access for your client ID / server.</li>
+            <li>Your radar source posts to the bot endpoint with your client ID.</li>
+            <li>The bot sends alerts to your Discord channel while subscription is active.</li>
+            <li>If payment fails or is canceled, alerts stop automatically.</li>
+          </ul>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="panel">
+          <h3>Use cases</h3>
+          <ul>
+            <li>Raid / threat / event notifications</li>
+            <li>Watchlists & keyword hits</li>
+            <li>Priority pings and rate-limited delivery</li>
+            <li>Multi-client routing (per client ID)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="sec-title">
+        <h2>Features</h2>
+        <p>Built for reliability and “no spam when unpaid”.</p>
+      </div>
+
+      <div class="grid3">
+        <div class="card feature">
+          <div class="badge"><span class="dot"></span> Subscription gating</div>
+          <p>Alerts are blocked before enqueue and again before send, so inactive subscriptions cannot post.</p>
+        </div>
+
+        <div class="card feature">
+          <div class="badge"><span class="dot" style="background:var(--accent2); box-shadow:0 0 0 3px rgba(34,197,94,.18)"></span> Rate-safe delivery</div>
+          <p>Queued sending and pacing so your Discord channels don’t get nuked by spikes.</p>
+        </div>
+
+        <div class="card feature">
+          <div class="badge"><span class="dot" style="background:var(--warn); box-shadow:0 0 0 3px rgba(245,158,11,.18)"></span> Multi-client routing</div>
+          <p>Each client ID maps to its own channel. One bot can serve multiple customers cleanly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="results">
+    <div class="wrap">
+      <div class="sec-title">
+        <h2>Results</h2>
+        <p>Example outcomes (replace with your real numbers later).</p>
+      </div>
+
+      <div class="stats">
+        <div class="card stat">
+          <div class="n">99.9%</div>
+          <div class="l">uptime target</div>
+        </div>
+        <div class="card stat">
+          <div class="n">&lt; 2s</div>
+          <div class="l">typical alert latency</div>
+        </div>
+        <div class="card stat">
+          <div class="n">Per-client</div>
+          <div class="l">routing & isolation</div>
+        </div>
+        <div class="card stat">
+          <div class="n">Auto-stop</div>
+          <div class="l">on unpaid subscription</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sec-title">
+        <h2>Pricing</h2>
+        <p>Replace prices/links with your Stripe plan(s).</p>
+      </div>
+
+      <div class="pricing">
+        <div class="card plan">
+          <span class="tag">Starter</span>
+          <h3>1 server / 1 client ID</h3>
+          <div class="price">£X / mo</div>
+          <ul>
+            <li>Radar alerts to 1 Discord channel</li>
+            <li>Subscription enforcement</li>
+            <li>Basic support</li>
+          </ul>
+          <div style="height:14px"></div>
+          <a class="btn primary" href="#">Subscribe (Stripe link)</a>
+        </div>
+
+        <div class="card plan" style="border-color: rgba(124,58,237,.35)">
+          <span class="tag">Pro</span>
+          <h3>Multiple channels</h3>
+          <div class="price">£Y / mo</div>
+          <ul>
+            <li>Multiple alert channels</li>
+            <li>Priority routing rules</li>
+            <li>Priority support</li>
+          </ul>
+          <div style="height:14px"></div>
+          <a class="btn primary" href="#">Subscribe (Stripe link)</a>
+        </div>
+
+        <div class="card plan">
+          <span class="tag">Custom</span>
+          <h3>Teams & special rules</h3>
+          <div class="price">Quote</div>
+          <ul>
+            <li>Custom routing & formats</li>
+            <li>Dedicated support</li>
+            <li>Onboarding help</li>
+          </ul>
+          <div style="height:14px"></div>
+          <a class="btn" href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <div class="note small">
+        Refunds/cancellations: cancel any time. If payment fails or subscription is canceled, alerts stop automatically.
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="faq">
+    <div class="wrap">
+      <div class="sec-title">
+        <h2>FAQ</h2>
+        <p>Short and clear answers for Stripe + customers.</p>
+      </div>
+
+      <details>
+        <summary>Do I need a website login?</summary>
+        <p>No. Delivery is through Discord. This page exists for service details and support contact.</p>
+      </details>
+
+      <details>
+        <summary>How do I get access after paying?</summary>
+        <p>After payment is confirmed, your client ID / server is activated and alerts start delivering to your configured channel.</p>
+      </details>
+
+      <details>
+        <summary>What happens if payment fails?</summary>
+        <p>The subscription is marked inactive and alerts stop automatically. No messages are posted while inactive.</p>
+      </details>
+
+      <details>
+        <summary>Is this affiliated with Discord?</summary>
+        <p>No. This is a third-party service delivered via Discord.</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="sec-title">
+        <h2>Contact</h2>
+        <p>Stripe expects a real way to reach you.</p>
+      </div>
+
+      <div class="card" style="padding:18px">
+        <div class="small">
+          <div><strong>Support email:</strong> your@email.com</div>
+          <div style="margin-top:6px"><strong>Service:</strong> Subscription-based Discord radar bot (alerts/notifications)</div>
+          <div style="margin-top:6px"><strong>Business name:</strong> YOUR BUSINESS NAME HERE</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <div class="small">
+        <strong>YOUR BUSINESS NAME HERE</strong><br/>
+        Subscription-based Discord radar bot delivering automated alerts to private servers.<br/>
+        Contact: your@email.com
+      </div>
+      <div class="small">
+        <div class="pill">Public page for billing/support</div>
+        <div style="height:10px"></div>
+        <div>© <span id="y"></span> YOUR BUSINESS NAME HERE</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
